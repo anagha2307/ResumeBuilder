@@ -1,6 +1,7 @@
 import React from 'react'
 import { IoDocumentText } from "react-icons/io5";
 import { IoDownloadSharp } from "react-icons/io5";
+import { Link } from 'react-router-dom';
 
 function ResumeGen() {
   return (
@@ -21,7 +22,9 @@ function ResumeGen() {
           <h5>Step 2</h5>
         </div>
         <div className="mb-5">
-          <button className="btn btn-primary px-4">Let's Start</button>
+          <Link to = {'/UserForm'}>
+            <button className="btn btn-primary px-4">Let's Start</button>
+          </Link>          
         </div>
       </div>      
     </div>

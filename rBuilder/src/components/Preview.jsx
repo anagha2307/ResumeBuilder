@@ -5,11 +5,25 @@ import {Link} from 'react-router-dom';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+import { IoIosDownload } from "react-icons/io";
+import { FaHistory } from "react-icons/fa";
+import Edit from './Edit'
 
 function Preview() {
   return (
     <>
-      <Box component="section" sx={{ p: 2,textAlign: "center",marginTop:"100px"}}>
+      <Stack direction={'row'} sx={{justifyContent:'flex-end'}}>
+        <Stack direction={'row'}>
+          {/*download*/}
+          <button className='btn fs-2 text-primary'><IoIosDownload /></button>
+          {/*edit*/}
+          <Edit/>
+          {/*history*/}
+          <button className='btn fs-3 text-primary'><FaHistory /></button>
+          <Link to={'/resume'} className='btn text-primary my-3'>BACK</Link>
+        </Stack>
+      </Stack>
+      <Box component="section" sx={{ p: 2,textAlign: "center"}}>
       <Paper elevation={3}>
         <h1>Name</h1>
         <h6>Job Title</h6>

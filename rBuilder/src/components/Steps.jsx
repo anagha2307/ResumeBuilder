@@ -15,6 +15,8 @@ function Steps() {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
 
+  const skillSuggestion = ['NODE JS', 'EXPRESS', 'REACT', 'MONGODB', 'GIT', 'BOOTSTRAP', 'NEXT JS', 'TAILWIND CSS']
+
   const isStepOptional = (step) => {
     return step === 1;
   };
@@ -44,73 +46,90 @@ function Steps() {
       throw new Error("You can't skip a step that isn't optional.");
     }
 
-  setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  setSkipped((prevSkipped) => {
-    const newSkipped = new Set(prevSkipped.values());
-    newSkipped.add(activeStep);
-    return newSkipped;
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setSkipped((prevSkipped) => {
+      const newSkipped = new Set(prevSkipped.values());
+      newSkipped.add(activeStep);
+      return newSkipped;
     });
   };
   const handleReset = () => {
     setActiveStep(0);
   };
   //render the content corresponding to the array index
-  const renderStepArrayContent = (stepCount) =>{
-    switch(stepCount){
-      case 0: return(
+  const renderStepArrayContent = (stepCount) => {
+    switch (stepCount) {
+      case 0: return (
         <div>
           <h4>Personal Details</h4>
           <div className="d-flex row ms-1">
-             <TextField id="name" label="Full Name" variant="standard" />
-             <TextField id="job" label="Job Title" variant="standard" />
-             <TextField id="loc" label="Location" variant="standard" />
+            <TextField id="name" label="Full Name" variant="standard" />
+            <TextField id="job" label="Job Title" variant="standard" />
+            <TextField id="loc" label="Location" variant="standard" />
           </div>
         </div>
       )
-      case 1: return(
+      case 1: return (
         <div>
           <h4>Contact Details</h4>
           <div className="d-flex row ms-1">
-             <TextField id="email" label="Email" variant="standard" />
-             <TextField id="phone" label="Phone" variant="standard" />
-             <TextField id="git" label="Github Profile Link" variant="standard" />
-             <TextField id="git" label="LinkedIn Profile Link" variant="standard" />
-             <TextField id="portfolio" label="Portfolio Link" variant="standard" />
+            <TextField id="email" label="Email" variant="standard" />
+            <TextField id="phone" label="Phone" variant="standard" />
+            <TextField id="git" label="Github Profile Link" variant="standard" />
+            <TextField id="git" label="LinkedIn Profile Link" variant="standard" />
+            <TextField id="portfolio" label="Portfolio Link" variant="standard" />
           </div>
         </div>
       )
-      case 2: return(
+      case 2: return (
         <div>
           <h4>Education Details</h4>
           <div className="d-flex row ms-1">
-             <TextField id="course" label="Course" variant="standard" />
-             <TextField id="college" label="College" variant="standard" />
-             <TextField id="uni" label="University" variant="standard" />
-             <TextField id="year" label="Year of Passing" variant="standard" />
+            <TextField id="course" label="Course" variant="standard" />
+            <TextField id="college" label="College" variant="standard" />
+            <TextField id="uni" label="University" variant="standard" />
+            <TextField id="year" label="Year of Passing" variant="standard" />
           </div>
         </div>
       )
-      case 3: return(
+      case 3: return (
         <div>
           <h4>Professional Details</h4>
           <div className="d-flex row ms-1">
-             <TextField id="title" label="Job or Internship" variant="standard" />
-             <TextField id="company" label="Company" variant="standard" />
-             <TextField id="location" label="Company Location" variant="standard" />
-             <TextField id="duration" label="Duration" variant="standard" />
+            <TextField id="title" label="Job or Internship" variant="standard" />
+            <TextField id="company" label="Company" variant="standard" />
+            <TextField id="location" label="Company Location" variant="standard" />
+            <TextField id="duration" label="Duration" variant="standard" />
           </div>
         </div>
       )
-      case 4: return(
+      case 4: return (
         <div>
-          <h4>Skills</h4>
+          <h3>Skills</h3>
+          <div className='d-flex justify-content-between align-items-center ms-1'>
+            <TextField sx={{width:"400px"}} id="skill" label="Add Skill" variant="standard" />
+            <Button variant="text">ADD</Button>
+          </div>
+          <h5 className='my-3'>Suggestions:</h5>
+          <div className="d-flex flex-wrap jusify-content-between my-3">
+            {
+              skillSuggestion.map(userskill => (
+                <Button variant="outlined" className='m-1' key={userskill}>{userskill}</Button>
+              ))
+            }
+          </div>
+          <h5 className='my-3'>Added Skills:</h5>
+          <div className="d-flex flex-wrap jusify-content-between my-3 gap-3">
+            {/*span duplicated according user adding skills*/}
+            <span className="btn btn-primary">REACT <button className="btn text-light">X</button></span>
+          </div>
         </div>
       )
-      case 5: return(
+      case 5: return (
         <div>
           <h4>Professional Summary</h4>
           <div className="d-flex row ms-1">
-             <TextField id="name" label="Write a short summary of yourself" variant="standard" multiline rows={4} />
+            <TextField id="name" label="Write a short summary of yourself" variant="standard" multiline rows={4} />
           </div>
         </div>
       )
@@ -120,64 +139,64 @@ function Steps() {
   return (
     <>
       <Box sx={{ width: '100%' }}>
-      <Stepper activeStep={activeStep}>
-        {steps.map((label, index) => {
-          const stepProps = {};
-          const labelProps = {};
-          if (isStepOptional(index)) {
-            labelProps.optional = (
-              <Typography variant="caption">Optional</Typography>
+        <Stepper activeStep={activeStep}>
+          {steps.map((label, index) => {
+            const stepProps = {};
+            const labelProps = {};
+            if (isStepOptional(index)) {
+              labelProps.optional = (
+                <Typography variant="caption">Optional</Typography>
+              );
+            }
+            if (isStepSkipped(index)) {
+              stepProps.completed = false;
+            }
+            return (
+              <Step key={label} {...stepProps}>
+                <StepLabel {...labelProps}>{label}</StepLabel>
+              </Step>
             );
-          }
-          if (isStepSkipped(index)) {
-            stepProps.completed = false;
-          }
-          return (
-            <Step key={label} {...stepProps}>
-              <StepLabel {...labelProps}>{label}</StepLabel>
-            </Step>
-          );
-        })}
-      </Stepper>
-      {activeStep === steps.length ? (
-        <React.Fragment>
-          <Typography sx={{ mt: 2, mb: 1 }}>
-            All steps completed - you&apos;re finished
-          </Typography>
-          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-            <Box sx={{ flex: '1 1 auto' }} />
-            <Button onClick={handleReset}>Reset</Button>
-          </Box>
-        </React.Fragment>
-      ) : (
-        <React.Fragment>
-          <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}
-            <Box sx={{mt:2}}>
-              {renderStepArrayContent(activeStep)}
+          })}
+        </Stepper>
+        {activeStep === steps.length ? (
+          <React.Fragment>
+            <Typography sx={{ mt: 2, mb: 1 }}>
+              All steps completed - you&apos;re finished
+            </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+              <Box sx={{ flex: '1 1 auto' }} />
+              <Button onClick={handleReset}>Reset</Button>
             </Box>
-          </Typography>
-          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-            <Button
-              color="inherit"
-              disabled={activeStep === 0}
-              onClick={handleBack}
-              sx={{ mr: 1 }}
-            >
-              Back
-            </Button>
-            <Box sx={{ flex: '1 1 auto' }} />
-            {isStepOptional(activeStep) && (
-              <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
-                Skip
+          </React.Fragment>
+        ) : (
+          <React.Fragment>
+            <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}
+              <Box sx={{ mt: 2 }}>
+                {renderStepArrayContent(activeStep)}
+              </Box>
+            </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+              <Button
+                color="inherit"
+                disabled={activeStep === 0}
+                onClick={handleBack}
+                sx={{ mr: 1 }}
+              >
+                Back
               </Button>
-            )}
-            <Button onClick={handleNext}>
-              {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-            </Button>
-          </Box>
-        </React.Fragment>
-      )}
-    </Box>
+              <Box sx={{ flex: '1 1 auto' }} />
+              {isStepOptional(activeStep) && (
+                <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
+                  Skip
+                </Button>
+              )}
+              <Button onClick={handleNext}>
+                {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+              </Button>
+            </Box>
+          </React.Fragment>
+        )}
+      </Box>
     </>
   )
 }

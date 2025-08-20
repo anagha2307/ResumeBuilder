@@ -19,7 +19,7 @@ function Preview() {
           {/*edit*/}
           <Edit/>
           {/*history*/}
-          <button className='btn fs-3 text-primary'><FaHistory /></button>
+          <button className='btn fs-3 text-primary'> <FaHistory /></button>
           <Link to={'/resume'} className='btn text-primary my-3'>BACK</Link>
         </Stack>
       </Stack>

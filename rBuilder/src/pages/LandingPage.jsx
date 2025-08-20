@@ -16,7 +16,7 @@ const LandingPage = () => {
             style={{ backgroundColor: "rgb(255,255,255,0.2)" }}>
             <h3>Designed to get hired</h3>
             <h4>Your skills, your story, your next job - all in one</h4>
-            <Link to={'/ResumeGen'}>
+            <Link to={'/resume'}>
               <button className='btn btn-primary'>Make your Resume</button>
             </Link>
           </div>

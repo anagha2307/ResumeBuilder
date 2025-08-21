@@ -12,45 +12,12 @@ import { useState, useRef } from 'react';
 const steps = ['Basic Information', 'Contact Details', 'Education Details', 'Work Experience',
   'Skills & Certifications', 'Review & submit'];
 
-function Steps() {
-  const [activeStep, setActiveStep] = React.useState(0);
-  const [skipped, setSkipped] = React.useState(new Set());
+function Steps({ userInput, setUserInput }) {
+  const [activeStep, setActiveStep] = useState(0);
+  const [skipped, setSkipped] = useState(new Set());
 
   const skillSuggestion = ['NODE JS', 'EXPRESS', 'REACT', 'MONGODB', 'GIT', 'BOOTSTRAP', 'NEXT JS', 'TAILWIND CSS']
-
-  //state for storing user input
-  const [userInput, setUserInput] = React.useState({
-    personalData: {
-      name: '',
-      jobTitle: '',
-      location: '',
-      email: '',
-      phone: '',
-      github: '',
-      linkedin: '',
-      portfolio: '',
-    },
-    educationData: {
-      course: '',
-      college: '',
-      university: '',
-      year: ''
-    },
-    experience: {
-      jobRole: '',
-      company: '',
-      jobLocation: '',
-      duration: ''
-    },
-    skills: [],
-    summary: ''
-
-  })
-  //console.log(userInput);
-
   const userSkillRef = useRef()
-  //console.log(userInput);
-
 
   const isStepOptional = (step) => {
     return step === 1;
@@ -93,19 +60,18 @@ function Steps() {
   };
 
   const addSkill = (inputSkill) => {
-    //alert(userSkillRef.current.value)
     if (inputSkill) {
       if (userInput.skills.includes(inputSkill)) {
-        alert('Given skill is already existing!!')
+        alert('Given skill already exists!');
+      } else {
+        setUserInput(prev => ({
+          ...prev, skills: [...prev.skills, inputSkill]
+        }));
       }
-      else {
-        setUserInput({...userInput, skills:[...userInput, skills, inputSkill] })
-      }
-
     }
-  }
+  };
   const removeSkill = (skill) => {
-    setUserInput({...userInput,skills : userInput.skills.filter((item) => item != skill)})
+    setUserInput({ ...userInput, skills: userInput.skills.filter((item) => item != skill) })
   }
   //render the content corresponding to the array index
   const renderStepArrayContent = (stepCount) => {
@@ -232,7 +198,8 @@ function Steps() {
             {
               userInput.skills.length > 0 ?
                 userInput.skills.map(skill => (
-                  <span className="btn btn-primary">{skill} <button className="btn text-light">X</button></span>
+                  <span className="btn btn-primary">{skill}
+                    <button className="btn text-light" onClick={() => removeSkill(skill)}>X</button></span>
                 )) :
                 <span>NIL</span>
             }
@@ -244,9 +211,9 @@ function Steps() {
           <h4>Professional Summary</h4>
           <div className="d-flex row ms-1">
             <TextField id="name" label="Write a short summary of yourself" variant="standard" multiline rows={4}
-              onChange={e => setUserInput
-                ({ ...userInput, summary: { ...userInput.summary, s: e.target.value } }
-                )}
+              onChange={(e) =>
+                setUserInput({ ...userInput, summary: e.target.value })
+              }
               value={userInput.summary} />
           </div>
         </div>

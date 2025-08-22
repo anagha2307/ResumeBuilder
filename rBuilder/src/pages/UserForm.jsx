@@ -1,6 +1,7 @@
 import React from 'react'
 import Steps from '../components/Steps'
 import Preview from '../components/Preview'
+import { useState } from 'react'
 
 
 function UserForm() {
@@ -32,18 +33,33 @@ function UserForm() {
       summary: ''
   
     })
+
+  //state for finish
+  const [finish,setFinish] = useState(false)
+
+
   return (
     <>
-    <div className="container">
+    {
+      finish?
+      <div className="flex justify-content-center align-items-center">
+        <Preview userInput={userInput}/>
+      </div>
+      :
+      <div className="container">
       <div className="row p-5">
         <div className="col-lg-6">
-          <Steps userInput={userInput} setUserInput={setUserInput}/>
+          <Steps userInput={userInput} setUserInput={setUserInput} 
+          setFinish={setFinish}/>
         </div>
         <div className="col-lg-6">
-          <Preview userInput={userInput}/>
+          <Preview userInput={userInput} finish={finish}/>
         </div>
       </div>
     </div>
+
+    }
+    
       
     </>
   )

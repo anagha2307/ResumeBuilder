@@ -28,7 +28,7 @@ function Preview({ userInput }) {
           </Stack>
           <Box component="section" sx={{ p: 2, textAlign: "center" }}>
             <Paper elevation={3}>
-              <h1>{userInput.personalData.name}</h1>
+              <h2>{userInput.personalData.name}</h2>
               <h6>{userInput.personalData.jobTitle}</h6>
               <p><span>{userInput.personalData.location}</span> |
                 <span>{userInput.personalData.email}</span> | <span>{userInput.personalData.phone}</span></p>

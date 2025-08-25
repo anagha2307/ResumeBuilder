@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import { Link } from 'react-router-dom';
@@ -7,27 +7,52 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { IoIosDownload } from "react-icons/io";
 import { FaHistory } from "react-icons/fa";
-import Edit from './Edit'
+import Edit from './Edit';
 
-function Preview({ userInput }) {
+import { jsPDF } from "jspdf";
+import html2canvas from "html2canvas";
+
+function Preview({ userInput, finish }) {
+  const [downloadStatus, setDownloadStatus] = useState(false)
+  //console.log(userInput);
+  const downloadCV = async () => {
+    //get element for taking screenshot
+    const input = document.getElementById("result")
+    const canvas = await html2canvas(input, { scale: 2 })
+    const imgURL = canvas.toDataURL('image/png')
+    //console.log(imgURL);
+    const pdf = new jsPDF()
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width; // keep ratio
+    pdf.addImage(imgURL, "PNG", 0, 0, pdfWidth, pdfHeight);
+    pdf.save('resume.pdf')
+    //get date
+    const localTimeData = new Date()
+    const timeStamp = `${localTimeData.toLocaleDateString()},${localTimeData.toLocaleTimeString()}`
+  }
   return (
     <>
       {
         userInput.personalData.name != "" &&
-        <>
-          <Stack direction={'row'} sx={{ justifyContent: 'flex-end' }}>
-            <Stack direction={'row'}>
-              {/*download*/}
-              <button className='btn fs-2 text-primary'><IoIosDownload /></button>
-              {/*edit*/}
-              <Edit />
-              {/*history*/}
-              <button className='btn fs-3 text-primary'> <FaHistory /></button>
-              <Link to={'/resume'} className='btn text-primary my-3'>BACK</Link>
+        <div className="d-flex flex-column">
+          {finish &&
+            <Stack direction={'row'} sx={{ justifyContent: 'flex-end' }}>
+              <Stack direction={'row'}>
+                {/*download*/}
+                <button onClick={downloadCV} className='btn fs-2 text-primary'><IoIosDownload /></button>
+                {/*edit*/}
+                <Edit />
+                {/*history*/}
+                <Link to="/history" className="btn fs-3 text-primary my-2">
+                  <FaHistory />
+                </Link>
+                <Link to={'/resume'} className='btn text-primary my-3'>BACK</Link>
+              </Stack>
             </Stack>
-          </Stack>
-          <Box component="section" sx={{ p: 2, textAlign: "center" }}>
-            <Paper elevation={3}>
+          }
+
+          <Box component="section" >
+            <Paper id="result" elevation={3} sx={{ p: 5, textAlign: "center", marginTop: '100px' }}>
               <h2>{userInput.personalData.name}</h2>
               <h6>{userInput.personalData.jobTitle}</h6>
               <p><span>{userInput.personalData.location}</span> |
@@ -55,14 +80,14 @@ function Preview({ userInput }) {
               <Divider sx={{ fontSize: "25px", marginBottom: "10px" }}>Skills</Divider>
               <Stack direction="row" justifyContent={'space-evenly'} sx={{ flexWrap: "wrap" }}>
                 {
-                  userInput.skills?.map(skill => (
-                    <Button variant="contained" sx={{ marginBottom: "10px" }}>{skill}</Button>
+                  userInput.skills?.map((skill, index) => (
+                    <Button key={index} variant="contained" sx={{ marginBottom: "10px" }}>{skill}</Button>
                   ))
                 }
               </Stack>
             </Paper>
           </Box>
-        </>
+        </div>
       }
     </>
   )

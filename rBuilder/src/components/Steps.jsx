@@ -9,11 +9,12 @@ import TextField from '@mui/material/TextField';
 import { useState, useRef } from 'react';
 import swal from 'sweetalert';
 
+import { addResumeAPI } from '../services/allAPI';
 
 const steps = ['Basic Information', 'Contact Details', 'Education Details', 'Work Experience',
   'Skills & Certifications', 'Review & submit'];
 
-function Steps({ userInput, setUserInput, setFinish}) {
+function Steps({ userInput, setUserInput, setFinish }) {
   const [activeStep, setActiveStep] = useState(0);
   const [skipped, setSkipped] = useState(new Set());
 
@@ -23,11 +24,9 @@ function Steps({ userInput, setUserInput, setFinish}) {
   const isStepOptional = (step) => {
     return step === 1;
   };
-
   const isStepSkipped = (step) => {
     return skipped.has(step);
   };
-
   const handleNext = () => {
     let newSkipped = skipped;
     if (isStepSkipped(activeStep)) {
@@ -37,11 +36,9 @@ function Steps({ userInput, setUserInput, setFinish}) {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     setSkipped(newSkipped);
   };
-
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
-
   const handleSkip = () => {
     if (!isStepOptional(activeStep)) {
       // You probably want to guard against something like this,
@@ -59,7 +56,6 @@ function Steps({ userInput, setUserInput, setFinish}) {
   const handleReset = () => {
     setActiveStep(0);
   };
-
   const addSkill = (inputSkill) => {
     if (inputSkill) {
       if (userInput.skills.includes(inputSkill)) {
@@ -221,26 +217,26 @@ function Steps({ userInput, setUserInput, setFinish}) {
       )
     }
   }
-  const handleAddResume = async() =>{
-      //alert("API called")
-      //api call
-      const {name,jobTitle,location} = userInput.personalData
-      if(name && jobTitle && location){
-          try{
-            const result = await addResumeAPI(userInput)
-            console.log("API result:", result);
-            swal("Success!","Resume added succesfully!","success")
-            setFinish(true)
-          }
-          catch(err){
-            console.log(err);
-            swal("Error!","Resume add Failed!","error")
-            setFinish(false)      
-          }
+  const handleAddResume = async() => {
+    //alert("API called")
+    //api call
+    const { name, jobTitle, location } = userInput.personalData
+    if (name && jobTitle && location) {
+      try {
+        const result = await addResumeAPI(userInput)
+        console.log("API result:", result);
+        swal("Success!", "Resume added succesfully!", "success")
+        setFinish(true)
       }
-      else{
-        alert("fill the form")
+      catch (err) {
+        console.log(err);
+        swal("Error!", "Resume add Failed!", "error")
+        setFinish(false)
       }
+    }
+    else {
+      alert("fill the form")
+    }
   }
 
   return (
@@ -301,10 +297,10 @@ function Steps({ userInput, setUserInput, setFinish}) {
               )}
               {
                 activeStep === steps.length - 1 ?
-              <Button onClick={handleAddResume}>Finish</Button>:
-              <Button onClick={handleNext}>Next</Button>
+                  <Button onClick={handleAddResume}>Finish</Button> :
+                  <Button onClick={handleNext}>Next</Button>
               }
-              
+
             </Box>
           </React.Fragment>
         )}

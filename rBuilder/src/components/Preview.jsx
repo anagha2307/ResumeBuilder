@@ -11,10 +11,12 @@ import Edit from './Edit';
 
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
+import { addDownloadHistoryAPI } from '../services/allAPI';
 
 function Preview({ userInput, finish }) {
   const [downloadStatus, setDownloadStatus] = useState(false)
-  //console.log(userInput);
+
+
   const downloadCV = async () => {
     //get element for taking screenshot
     const input = document.getElementById("result")
@@ -29,30 +31,49 @@ function Preview({ userInput, finish }) {
     //get date
     const localTimeData = new Date()
     const timeStamp = `${localTimeData.toLocaleDateString()},${localTimeData.toLocaleTimeString()}`
+    console.log(timeStamp);
+    //add download cv to json using api call
+    try {
+      const result = await addDownloadHistoryAPI({ ...userInput, imgURL, timeStamp })
+      console.log(result);
+      setDownloadStatus(true)
+    } catch (err) {
+      console.log(err);
+
+    }
+
   }
   return (
     <>
       {
         userInput.personalData.name != "" &&
-        <div className="d-flex flex-column">
+        <div className="d-flex flex-column justify-content-center align-items-center">
           {finish &&
             <Stack direction={'row'} sx={{ justifyContent: 'flex-end' }}>
               <Stack direction={'row'}>
                 {/*download*/}
                 <button onClick={downloadCV} className='btn fs-2 text-primary'><IoIosDownload /></button>
-                {/*edit*/}
-                <Edit />
-                {/*history*/}
-                <Link to="/history" className="btn fs-3 text-primary my-2">
-                  <FaHistory />
-                </Link>
+                {
+                  downloadStatus &&
+                  <>
+                    {/*edit*/}
+                    <Edit />
+                    {/*history*/}
+                    <Link to="/history" className="btn fs-3 text-primary my-2">
+                      <FaHistory />
+                    </Link>
+                  </>
+                }
+
+
+                {/* back */}
                 <Link to={'/resume'} className='btn text-primary my-3'>BACK</Link>
               </Stack>
             </Stack>
           }
 
           <Box component="section" >
-            <Paper id="result" elevation={3} sx={{ p: 5, textAlign: "center", marginTop: '100px' }}>
+            <Paper id="result" elevation={3} sx={{ p: 5, textAlign: "center", marginTop: '30px', width: '500px', mx: 5 }}>
               <h2>{userInput.personalData.name}</h2>
               <h6>{userInput.personalData.jobTitle}</h6>
               <p><span>{userInput.personalData.location}</span> |

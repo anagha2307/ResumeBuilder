@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import { Link } from 'react-router-dom';
@@ -6,7 +6,37 @@ import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { MdDelete } from "react-icons/md";
+import { deleteHistoryAPI, getHistoryAPI } from '../services/allAPI';
+
 function History() {
+  const [resume, setResume] = useState([])
+
+
+  useEffect(() => {
+    getHistory()
+  }, [])
+
+
+  const getHistory = async () => {
+    try {
+      const result = await getHistoryAPI()
+      console.log(result);
+      setResume(result.data)
+    }
+    catch (err) {
+      console.log(err);
+
+    }
+  }
+  const handleDelete = async (id) => {
+    try {
+      const res = await deleteHistoryAPI(id);
+      setResume(resume.filter(item => item.id !== id));
+    } catch (err) {
+      console.error("Error deleting item:", err);
+    }
+  };
+
   return (
     <div id='history'>
       <div>
@@ -14,45 +44,28 @@ function History() {
       </div>
       <Box component="section" className='container-fluid'>
         <div className="row">
-          <div className="col-md-4">         
-            <Paper elevation={3} sx={{ textAlign: 'center', my: 5, p: 5 }}>
-              <div className="d-flex justify-content-evenly align-items-center">
-              <h6>Review At: <br/> 24/07/25 7.00 PM</h6>
-              <button className="btn text-danger fs-5"><MdDelete /></button>
-            </div>
-              <div className='border rounded p-3'>
-                <h1>Name</h1>
-                <h6>Job Title</h6>
-                <p><span>Location</span> | <span>Email</span> | <span>Phone</span></p>
-                <p>
-                  <Link href={""}>GITHUB</Link> |
-                  <Link href={""}>LINKEDIN</Link> |
-                  <Link href={""}>PORTFOLIO</Link>
-                </p>
-                <Divider sx={{ fontSize: "25px" }}>Summary</Divider>
-                <p className='fs-5 ms-3'>User summary</p>
-                <Divider sx={{ fontSize: "25px", marginBottom: "10px" }}>Education</Divider>
-                <h5>User Education</h5>
-                <p><span>College</span> | <span>University</span> | <span>Year</span></p>
-                <Divider sx={{ fontSize: "25px", marginBottom: "10px" }}>Professional Experience</Divider>
-                <p><span>Company</span> | <span>Location</span> | <span>Duration</span></p>
-                <Divider sx={{ fontSize: "25px", marginBottom: "10px" }}>Skills</Divider>
-                <Stack direction="row" justifyContent={'space-evenly'} sx={{ flexWrap: "wrap" }}>
-                  <Button variant="contained" sx={{ marginBottom: "10px" }}>User Skill</Button>
-                  <Button variant="contained" sx={{ marginBottom: "10px" }}>User Skill</Button>
-                  <Button variant="contained" sx={{ marginBottom: "10px" }}>User Skill</Button>
-                  <Button variant="contained" sx={{ marginBottom: "10px" }}>User Skill</Button>
-                  <Button variant="contained" sx={{ marginBottom: "10px" }}>User Skill</Button>
-                  <Button variant="contained" sx={{ marginBottom: "10px" }}>User Skill</Button>
-                  <Button variant="contained" sx={{ marginBottom: "10px" }}>User Skill</Button>
-                  <Button variant="contained" sx={{ marginBottom: "10px" }}>User Skill</Button>
-                  <Button variant="contained" sx={{ marginBottom: "10px" }}>User Skill</Button>
-                </Stack>
-          </div>
-          </Paper>
+          {
+            resume.length > 0 ?
+              resume?.map((item, index) => (
+                <div key={index} className="col-md-4">
+                  <Paper elevation={3} sx={{ textAlign: 'center', my: 5, p: 5 ,width:'400px'}}>
+                    <div className="d-flex justify-content-evenly align-items-center">
+                      <h6>Review At: <br /> {item?.timeStamp}</h6>
+                      <button onClick={() => handleDelete(item.id)} className="btn text-danger fs-5"><MdDelete /></button>
+                    </div>
+                    <div className='border rounded p-3'>
+                      <img src={item?.imgURL} className='img-fluid' alt="resume" />
+                    </div>
+                  </Paper>
+                </div>
+              ))
+              :
+              <p>History is Unavailable!!!</p>
+          }
+
 
         </div>
-    </div>
+
 
       </Box >
 

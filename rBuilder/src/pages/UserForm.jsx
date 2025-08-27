@@ -4,6 +4,8 @@ import Preview from '../components/Preview'
 import { useState } from 'react'
 
 
+
+
 function UserForm() {
   //state for storing user input
   const [userInput, setUserInput] = React.useState({
@@ -35,22 +37,24 @@ function UserForm() {
   })
   //state for finish
   const [finish, setFinish] = useState(false)
+  //state for storing id of created resume
+  const [resumeId,setResumeId] = useState("") 
   return (
     <>
       {
-        finish ?
+        finish ? 
           <div className="flex justify-content-center align-items-center">
-            <Preview userInput={userInput} finish={finish} />
+            <Preview resumeId={resumeId} userInput={userInput} finish={finish} />
           </div>
           :
           <div className="container ">
             <div className="row p-5 gap-6">
               <div className="col-lg-6">
-                <Steps userInput={userInput} setUserInput={setUserInput}
+                <Steps setResumeId={setResumeId} userInput={userInput} setUserInput={setUserInput}
                   setFinish={setFinish} />
               </div>
               <div className="col-lg-6">
-                <Preview userInput={userInput} finish={finish} />
+                <Preview userInput={userInput} />
               </div>
             </div>
           </div>

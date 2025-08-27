@@ -21,10 +21,22 @@ const style = {
     overflowY: 'auto'
 };
 
-function Edit() {
+function Edit({ resumeId}) {
+    const [userInput, setUserInput] = React.useState({})
     const [open, setOpen] = React.useState(false);
+    //console.log(resumeId);
+    console.log(userInput);
+
+    React.useEffect(() => {
+        resumeId && getEditResumeDetails()
+    }, [resumeId])
+
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+
+    const getEditResumeDetails = async () => {
+
+    }
     return (
         <div>
             <button onClick={handleOpen} className='btn fs-3 text-primary my-2'><MdEditDocument /></button>
@@ -38,28 +50,32 @@ function Edit() {
                     <Typography id="modal-modal-title" variant="h6" component="h2">
                         Edit Details
                     </Typography>
-                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-
+                    <Typography id="modal-modal-description" component="div" sx={{ mt: 2 }}>
                         <h5>Personal Details</h5>
                         <div className="d-flex row ms-1">
-                            <TextField id="name" label="Full Name" variant="standard" />
-                            <TextField id="job" label="Job Title" variant="standard" />
-                            <TextField id="loc" label="Location" variant="standard" />
+                            <TextField id="name" label="Full Name" variant="standard"
+                                onChange={e => setUserInput(
+                                    {
+                                        ...userInput, personalData: { ...userInput.personalData, name: e.target.value }
+                                    })}
+                                value={userInput?.personalData?.name} />
+                            <TextField id="job" label="Job Title" variant="standard"
+                                onChange={e => setUserInput(
+                                    { ...userInput, personalData: { ...userInput.personalData, jobTitle: e.target.value } })}
+                                value={userInput?.personalData?.jobTitle} />
+                            <TextField id="loc" label="Location" variant="standard"
+                                onChange={e => setUserInput(
+                                    {
+                                        ...userInput, personalData: { ...userInput.personalData, location: e.target.value }
+                                    })}
+                                value={userInput?.personalData?.location} />
                         </div>
                         <h5 className='mt-4'>Contact Details</h5>
                         <div className="d-flex row ms-1">
-                            <TextField id="email" label="Email" variant="standard" />
-                            <TextField id="phone" label="Phone" variant="standard" />
-                            <TextField id="git" label="Github Profile Link" variant="standard" />
-                            <TextField id="git" label="LinkedIn Profile Link" variant="standard" />
-                            <TextField id="portfolio" label="Portfolio Link" variant="standard" />
                         </div>
                         <h5 className='mt-4'>Education Details</h5>
                         <div className="d-flex row ms-1">
-                            <TextField id="course" label="Course" variant="standard" />
-                            <TextField id="college" label="College" variant="standard" />
-                            <TextField id="uni" label="University" variant="standard" />
-                            <TextField id="year" label="Year of Passing" variant="standard" />
+
                         </div>
                         <h5 className='mt-4'>Professional Details</h5>
                         <div className="d-flex row ms-1">
@@ -80,7 +96,7 @@ function Edit() {
                         </div>
                         <h5 className='mt-4'>Professional Summary</h5>
                         <div className="d-flex row ms-1">
-                            <TextField id="name" label="Write a short summary of yourself" variant="standard" multiline rows={4} />
+                            <TextField id="summary" label="Write a short summary of yourself" variant="standard" multiline rows={4} />
                         </div>
                     </Typography>
                 </Box>

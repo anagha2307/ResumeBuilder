@@ -14,7 +14,7 @@ import { addResumeAPI } from '../services/allAPI';
 const steps = ['Basic Information', 'Contact Details', 'Education Details', 'Work Experience',
   'Skills & Certifications', 'Review & submit'];
 
-function Steps({ userInput, setUserInput, setFinish }) {
+function Steps({ userInput, setUserInput, setFinish,setResumeId }) {
   const [activeStep, setActiveStep] = useState(0);
   const [skipped, setSkipped] = useState(new Set());
 
@@ -217,6 +217,7 @@ function Steps({ userInput, setUserInput, setFinish }) {
       )
     }
   }
+  //add resume
   const handleAddResume = async() => {
     //alert("API called")
     //api call
@@ -224,7 +225,8 @@ function Steps({ userInput, setUserInput, setFinish }) {
     if (name && jobTitle && location) {
       try {
         const result = await addResumeAPI(userInput)
-        console.log("API result:", result);
+        setResumeId(result?.data?.id)
+        console.log(result?.data?.id);        
         swal("Success!", "Resume added succesfully!", "success")
         setFinish(true)
       }

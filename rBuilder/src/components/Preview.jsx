@@ -13,7 +13,7 @@ import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
 import { addDownloadHistoryAPI } from '../services/allAPI';
 
-function Preview({ userInput, finish }) {
+function Preview({ userInput, finish,resumeId }) {
   const [downloadStatus, setDownloadStatus] = useState(false)
 
 
@@ -31,7 +31,7 @@ function Preview({ userInput, finish }) {
     //get date
     const localTimeData = new Date()
     const timeStamp = `${localTimeData.toLocaleDateString()},${localTimeData.toLocaleTimeString()}`
-    console.log(timeStamp);
+    //console.log(timeStamp);
     //add download cv to json using api call
     try {
       const result = await addDownloadHistoryAPI({ ...userInput, imgURL, timeStamp })
@@ -53,19 +53,17 @@ function Preview({ userInput, finish }) {
               <Stack direction={'row'}>
                 {/*download*/}
                 <button onClick={downloadCV} className='btn fs-2 text-primary'><IoIosDownload /></button>
-                {
+                  {/*edit*/}
+                    <Edit resumeId={resumeId} />
+                  {
                   downloadStatus &&
                   <>
-                    {/*edit*/}
-                    <Edit />
                     {/*history*/}
                     <Link to="/history" className="btn fs-3 text-primary my-2">
                       <FaHistory />
                     </Link>
                   </>
                 }
-
-
                 {/* back */}
                 <Link to={'/resume'} className='btn text-primary my-3'>BACK</Link>
               </Stack>
@@ -73,7 +71,7 @@ function Preview({ userInput, finish }) {
           }
 
           <Box component="section" >
-            <Paper id="result" elevation={3} sx={{ p: 5, textAlign: "center", marginTop: '30px', width: '500px', mx: 5 }}>
+            <Paper id="result" elevation={3} sx={{ p: 5, textAlign: "center", marginTop: '80px', width: '500px', mx: 5 }}>
               <h2>{userInput.personalData.name}</h2>
               <h6>{userInput.personalData.jobTitle}</h6>
               <p><span>{userInput.personalData.location}</span> |
@@ -83,11 +81,12 @@ function Preview({ userInput, finish }) {
                 <Link href={userInput.personalData.linkedin}>LINKEDIN</Link> |
                 <Link href={userInput.personalData.portfolio}>PORTFOLIO</Link>
               </p>
-              <Divider sx={{ fontSize: "25px" }}>Summary</Divider>
+              <Divider sx={{ fontSize: "25px",textAlign:'justify' }}>Summary</Divider>
               <p className='fs-5 ms-3'>{userInput.summary}</p>
               <Divider sx={{ fontSize: "25px", marginBottom: "10px" }}>Education</Divider>
               <h5>{userInput.educationData.course}</h5>
-              <p><span>{userInput.educationData.college}</span> |
+              <p>
+                <span>{userInput.educationData.college}</span> |
                 <span>{userInput.educationData.university}</span> |
                 <span>{userInput.educationData.year}</span>
               </p>

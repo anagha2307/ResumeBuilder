@@ -3,7 +3,7 @@ import BASEURL from "./baseUrl";
 
 //addResumeAPI - POST   called by Steps Component
 export const addResumeAPI = async(resume) => {
-   return await commonAPI("POST",`${BASEURL}/all-resume`,resume)
+   return await commonAPI("POST",`${BASEURL}/all-resumes`,resume)
 }
 //editResumeAPI -PUT
 
@@ -18,4 +18,8 @@ export const getHistoryAPI = async() => {
 //deleteHistoryAPI - DELETE
 export const deleteHistoryAPI = async(id) => {
   return await  commonAPI("DELETE",`${BASEURL}/history/${id}`,{})
+}
+//getResumeAPI = GET called by edit component when its open in  browser(useeffect)
+export const getResumeAPI = async(id) => {
+  return await  commonAPI("GET",`${BASEURL}/all-resumes/${id}`,{})
 }
